@@ -69,3 +69,9 @@ Sites 기본 패키징 스크립트는 이 Windows의 bash 실행 파일 부재�
 ## 후속 변경 — 다크 테마와 Vercel 이전
 
 2026-09-21: 시스템(기본)/라이트/다크 테마, 선택 유지, 시스템 변화 반영. UI 전환 전후 카드 PNG 데이터 동일. Node 검사 25건 PASS. 실제 Vercel 배포 https://skt-aleph-project-3-studio.vercel.app 에서 30개 브라우저 assertion PASS. 세 비율 PNG 픽셀 일치와 템플릿/JSON 검사 포함. 새 비로그인 격리 Chromium에서 결과물 및 전체 커밋 소스 URL 접근 확인. 기준 커밋 b037f9cb28554d8f6b59adaab032f67c3f5b11d3. 상세 근거 및 테스트 구분은 DEPLOYMENT.md.
+
+## 후속 변경 — 무료 한글 폰트 7종
+
+2026-09-21: 공식 배포본과 OFL 1.1 고지를 함께 포함했다. 선정 근거·파일·원본 리비전은 FONTS.md. Node 검사 29건 PASS. 로컬 전용 브라우저(127.0.0.1:8005)에서 fonts-browser.js 41건 PASS, 기존 browser.js 30건 PASS. 원본은 qa/fonts-browser-results.json, qa/fonts-regression-results.json.
+
+7종 각각 실제 FontFace 로드, 세 화면비 PNG 전체 픽셀 일치, JPEG 디코딩을 확인했다. 폰트 전송 실패를 주입했을 때 이전 글꼴·저장 JSON·캔버스가 보존되었다. 템플릿과 JSON의 새 폰트 ID 복원도 통과했다. 실제 새로고침 후 나눔손글씨 펜 로드와 템플릿 1개 유지 확인. qa/fonts-contact.png의 7종 글자 모양을 시각 확인했다. 폰트 검사의 첫 실패는 공백이 있는 FontFace.family가 따옴표로 직렬화되는 검사 코드 문제였으며 실제 폰트 로드는 성공했다. 비교 시 따옴표를 정규화한 뒤 전체 재검사했다.

@@ -1,10 +1,11 @@
+import {FONT_IDS} from './fonts.js';
 export const RATIOS={square:[1080,1080],portrait:[1080,1350],story:[1080,1920]};
 export const DEFAULT={ratio:'square',preset:'lilac',headline:'오늘도 나는\n제법 괜찮아',caption:'조금 느려도, 내 속도로 가는 중.',font:'sans',align:'center',size:80,color:'#262238',outline:false,fit:'cover',shade:0,top:9,bottom:84,image:null};
 export const MAX_FILE=12*1024*1024;
 function fail(message){throw new Error(message)}
 export function validateState(s){
   if(!s||typeof s!=='object'||Array.isArray(s))fail('편집 데이터가 올바르지 않아요.');
-  for(const [key,values] of Object.entries({ratio:Object.keys(RATIOS),preset:['lilac','peach','night'],font:['sans','serif','mono'],align:['left','center','right'],fit:['cover','contain']}))if(!values.includes(s[key]))fail(`${key} 항목이 없거나 올바르지 않아요.`);
+  for(const [key,values] of Object.entries({ratio:Object.keys(RATIOS),preset:['lilac','peach','night'],font:FONT_IDS,align:['left','center','right'],fit:['cover','contain']}))if(!values.includes(s[key]))fail(`${key} 항목이 없거나 올바르지 않아요.`);
   for(const [key,max] of [['headline',160],['caption',240]])if(typeof s[key]!=='string'||s[key].length>max)fail(`${key} 문구가 없거나 너무 길어요.`);
   for(const [key,min,max] of [['size',28,120],['shade',0,70],['top',0,70],['bottom',30,100]])if(!Number.isFinite(s[key])||s[key]<min||s[key]>max)fail(`${key} 값이 허용 범위를 벗어났어요.`);
   if(typeof s.outline!=='boolean'||!/^#[a-f0-9]{6}$/i.test(s.color))fail('글자 색 또는 테두리 값이 올바르지 않아요.');

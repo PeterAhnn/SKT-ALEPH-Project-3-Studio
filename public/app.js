@@ -1,8 +1,19 @@
 import {DEFAULT,RATIOS,MAX_FILE,validateBackup,validateState,checkImage,wrapText} from './core.js';
+import {FONT_OPTIONS,canvasFont,ensureFont} from './fonts.js';
 const $=id=>document.getElementById(id),canvas=$('canvas'),ctx=canvas.getContext('2d');
 const KEY='jjal-studio-v1'; let state={...DEFAULT},templates=[],selected=null,image=null,loading=false,storageBlocked=false;
 const fields=['headline','caption','font','align','size','color','outline','fit','shade','top','bottom'];
-const fonts={sans:'"Malgun Gothic", "Apple SD Gothic Neo", sans-serif',serif:'Batang, "Noto Serif CJK KR", serif',mono:'Consolas, "Malgun Gothic", monospace'};
+for(const [label,custom] of [['무료 한글 폰트',true],['기기 기본 폰트',false]]){
+  const group=document.createElement('optgroup');group.label=label;
+  for(const font of FONT_OPTIONS.filter(f=>Boolean(f.file)===custom)){const option=document.createElement('option');option.value=font.id;option.textContent=font.label;group.append(option)}
+  $('font').append(group);
+}
+async function prepareFont(id){
+  const font=FONT_OPTIONS.find(f=>f.id===id);
+  $('font-status').textContent=font.file?'글꼴을 준비하고 있어요…':'기기에 설치된 기본 글꼴을 사용해요.';
+  try{await ensureFont(id);$('font-status').textContent=font.file?'폰트 준비 완료 · 같은 글꼴로 이미지에 저장돼요.':'기기에 설치된 기본 글꼴을 사용해요.'}
+  catch(error){$('font-status').textContent='글꼴 준비 실패 · 다시 시도하거나 다른 글꼴을 골라 주세요.';throw error}
+}
 function status(message,error=false){$('status').textContent=message;$('status').classList.toggle('error',error)}
 function background(c,w,h,preset){
   const colors={lilac:['#d9cbed','#b49acd','#ebe4f4'],peach:['#fbd1b7','#e7a280','#ffedd4'],night:['#272f48','#4c5d76','#96ac93']}[preset];
@@ -19,8 +30,8 @@ function drawText(text,yPercent,maxHeight,size){
   if(!text)return false;
   const w=canvas.width,h=canvas.height,margin=w*.065,maxWidth=w-margin*2;
   let n=size,lines=[];
-  do {ctx.font=`800 ${n}px ${fonts[state.font]}`;lines=wrapText(ctx,text,maxWidth);if(lines.length*n*1.3<=maxHeight&&lines.every(l=>ctx.measureText(l).width<=maxWidth))break;n=Math.max(.5,n-.5)}while(n>.5);
-  ctx.font=`800 ${n}px ${fonts[state.font]}`;
+  do {ctx.font=canvasFont(state.font,n);lines=wrapText(ctx,text,maxWidth);if(lines.length*n*1.3<=maxHeight&&lines.every(l=>ctx.measureText(l).width<=maxWidth))break;n=Math.max(.5,n-.5)}while(n>.5);
+  ctx.font=canvasFont(state.font,n);
   const blockHeight=lines.length*n*1.3,y=Math.max(margin,Math.min(h-margin-blockHeight,h*yPercent/100));
   ctx.textBaseline='top';ctx.textAlign=state.align;ctx.lineJoin='round';ctx.lineWidth=Math.max(2,n*.08);ctx.strokeStyle=state.color.toLowerCase()==='#ffffff'?'#262238':'#ffffff';ctx.fillStyle=state.color;
   const x=state.align==='left'?margin:state.align==='right'?w-margin:w/2;
@@ -58,23 +69,24 @@ async function cleanImage(bytes){
 }
 async function busy(task){if(loading)return;loading=true;const controls=[...document.querySelectorAll('input,textarea,select,button')],prior=controls.map(c=>c.disabled);controls.forEach(c=>c.disabled=true);try{await task()}catch(e){status(e.message,true)}finally{controls.forEach((c,i)=>c.disabled=prior[i]);loading=false;$('update-template').disabled=!selected;$('remove-image').disabled=!state.image}}
 async function upload(file){if(!file)return;await busy(async()=>{if(file.size>MAX_FILE)throw new Error('12MB 이하 이미지를 골라 주세요. 기존 작업은 유지돼요.');const clean=await cleanImage(new Uint8Array(await file.arrayBuffer()));state={...state,image:clean.src};image=clean.img;sync();status('사진을 불러왔어요. 위치 정보 등 원본 메타데이터는 제거했어요.');saveDraft()})}
-for(const field of fields)$(field).addEventListener('input',()=>{state[field]=field==='outline'?$(field).checked:['size','shade','top','bottom'].includes(field)?Number($(field).value):$(field).value;sync();saveDraft()});
+for(const field of fields.filter(f=>f!=='font'))$(field).addEventListener('input',()=>{state[field]=field==='outline'?$(field).checked:['size','shade','top','bottom'].includes(field)?Number($(field).value):$(field).value;sync();saveDraft()});
+$('font').addEventListener('change',()=>{const next=$('font').value;busy(async()=>{try{await prepareFont(next);state.font=next;sync();status('글꼴을 바꿨어요.');saveDraft()}finally{$('font').value=state.font}})});
 document.querySelectorAll('[data-ratio]').forEach(b=>b.onclick=()=>{state.ratio=b.dataset.ratio;sync();saveDraft()});
 document.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>{state.preset=b.dataset.preset;state.image=null;image=null;sync();saveDraft()});
 $('remove-image').onclick=()=>{state.image=null;image=null;sync();saveDraft()};
 $('upload').onchange=async e=>{await upload(e.target.files[0]);e.target.value=''};
 for(const event of ['dragover','dragleave','drop'])$('dropzone').addEventListener(event,e=>{e.preventDefault();$('dropzone').classList.toggle('drag',event==='dragover');if(event==='drop'){if(e.dataTransfer.files.length!==1)status('이미지 한 개씩 불러와 주세요.',true);else upload(e.dataTransfer.files[0])}});
-$('reset').onclick=()=>{if(!confirm('현재 편집을 처음으로 되돌릴까요? 저장한 템플릿은 유지돼요.'))return;state={...DEFAULT};image=null;selected=null;$('template-name').value='';sync();list();status('기본 카드로 되돌렸어요.');saveDraft()};
+$('reset').onclick=()=>{if(!confirm('현재 편집을 처음으로 되돌릴까요? 저장한 템플릿은 유지돼요.'))return;state={...DEFAULT};image=null;selected=null;$('template-name').value='';$('font-status').textContent='기기에 설치된 기본 글꼴을 사용해요.';sync();list();status('기본 카드로 되돌렸어요.');saveDraft()};
 function download(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),10000)}
-$('download').onclick=()=>busy(async()=>{await document.fonts.ready;render();const type=$('format').value,blob=await new Promise(r=>canvas.toBlob(r,'image/'+type,.95));if(!blob)throw new Error('이미지 저장에 실패했어요. 다시 시도해 주세요.');download(blob,`jjal-${state.ratio}.${type==='jpeg'?'jpg':'png'}`);status(`${type.toUpperCase()} 파일을 준비했어요. 브라우저 다운로드 목록에서 확인하세요.`)});
+$('download').onclick=()=>busy(async()=>{await prepareFont(state.font);await document.fonts.ready;render();const type=$('format').value,blob=await new Promise(r=>canvas.toBlob(r,'image/'+type,.95));if(!blob)throw new Error('이미지 저장에 실패했어요. 다시 시도해 주세요.');download(blob,`jjal-${state.ratio}.${type==='jpeg'?'jpg':'png'}`);status(`${type.toUpperCase()} 파일을 준비했어요. 브라우저 다운로드 목록에서 확인하세요.`)});
 function list(){
   $('templates').replaceChildren();$('template-count').textContent=`${templates.length} / 12`;$('update-template').disabled=!selected;
   if(!templates.length){const p=document.createElement('p');p.className='empty';p.textContent='아직 보관한 템플릿이 없어요. 첫 번째 한 장을 저장해 볼까요?';$('templates').append(p)}
-  for(const t of templates){const row=document.createElement('div');row.className='template'+(t.id===selected?' selected':'');const load=document.createElement('button');load.className='load';load.title=t.name;const name=document.createElement('span');name.className='name';name.textContent=t.name;const mark=document.createElement('span');mark.textContent='▧';load.append(mark,name);load.onclick=()=>busy(async()=>{const next=validateState(t.state),img=next.image?await decode(next.image):null;state={...next};image=img;selected=t.id;$('template-name').value=t.name;sync();list();status('템플릿을 불러왔어요.');saveDraft()});const del=document.createElement('button');del.className='delete';del.textContent='×';del.setAttribute('aria-label',t.name+' 삭제');del.onclick=()=>{if(!confirm(`“${t.name}” 템플릿을 삭제할까요?`))return;try{const next=templates.filter(x=>x.id!==t.id);persist({...data(),templates:next});templates=next;if(selected===t.id)selected=null;list();status('템플릿을 삭제했어요. 현재 편집은 유지돼요.')}catch(e){status(e.message,true)}};row.append(load,del);$('templates').append(row)}
+  for(const t of templates){const row=document.createElement('div');row.className='template'+(t.id===selected?' selected':'');const load=document.createElement('button');load.className='load';load.title=t.name;const name=document.createElement('span');name.className='name';name.textContent=t.name;const mark=document.createElement('span');mark.textContent='▧';load.append(mark,name);load.onclick=()=>busy(async()=>{const next=validateState(t.state),img=next.image?await decode(next.image):null;await prepareFont(next.font);state={...next};image=img;selected=t.id;$('template-name').value=t.name;sync();list();status('템플릿을 불러왔어요.');saveDraft()});const del=document.createElement('button');del.className='delete';del.textContent='×';del.setAttribute('aria-label',t.name+' 삭제');del.onclick=()=>{if(!confirm(`“${t.name}” 템플릿을 삭제할까요?`))return;try{const next=templates.filter(x=>x.id!==t.id);persist({...data(),templates:next});templates=next;if(selected===t.id)selected=null;list();status('템플릿을 삭제했어요. 현재 편집은 유지돼요.')}catch(e){status(e.message,true)}};row.append(load,del);$('templates').append(row)}
 }
 function saveTemplate(update=false){try{const name=$('template-name').value.trim();if(!name)throw new Error('템플릿 이름을 입력해 주세요.');if(!update&&templates.length>=12)throw new Error('최대 12개까지 보관할 수 있어요. JSON 백업 후 정리해 주세요.');if(update&&!templates.some(t=>t.id===selected))throw new Error('수정할 템플릿을 먼저 불러와 주세요.');const item={id:update?selected:crypto.randomUUID(),name,state:{...state}},next=update?templates.map(t=>t.id===selected?item:t):[...templates,item];persist({...data(),templates:next});templates=next;selected=item.id;list();status(update?'선택한 템플릿을 수정했어요.':'새 템플릿을 저장했어요.')}catch(e){status(e.message,true)}}
 $('save-template').onclick=()=>saveTemplate();$('update-template').onclick=()=>saveTemplate(true);
 $('backup').onclick=()=>{download(new Blob([JSON.stringify(data(),null,2)],{type:'application/json'}),'jjal-studio-backup.json');status('현재 편집과 모든 템플릿의 JSON 백업을 준비했어요.')};
-$('restore').onchange=e=>{const file=e.target.files[0];e.target.value='';if(!file)return;busy(async()=>{if(file.size>16*1024*1024)throw new Error('JSON은 최대 16MB까지 복원할 수 있어요.');let raw;try{raw=JSON.parse(await file.text())}catch{throw new Error('JSON 문법이 손상됐어요. 현재 편집과 템플릿은 유지돼요.')}const next=validateBackup(raw);for(const s of [next.current,...next.templates.map(t=>t.state)])if(s.image){s.image=(await cleanImage(bytesFromData(s.image))).src}const img=next.current.image?await decode(next.current.image):null;if(!confirm(`현재 편집과 템플릿 목록을 백업의 ${next.templates.length}개로 바꿀까요? 기존 작업이 필요하면 취소 후 JSON 백업을 먼저 받아 주세요.`))return;const blocked=storageBlocked;storageBlocked=false;try{persist(next)}catch(e){storageBlocked=blocked;throw e}state=next.current;templates=next.templates;image=img;selected=null;sync();list();status(`${templates.length}개 템플릿과 편집 내용을 복원했어요.`)})};
+$('restore').onchange=e=>{const file=e.target.files[0];e.target.value='';if(!file)return;busy(async()=>{if(file.size>16*1024*1024)throw new Error('JSON은 최대 16MB까지 복원할 수 있어요.');let raw;try{raw=JSON.parse(await file.text())}catch{throw new Error('JSON 문법이 손상됐어요. 현재 편집과 템플릿은 유지돼요.')}const next=validateBackup(raw);for(const s of [next.current,...next.templates.map(t=>t.state)])if(s.image){s.image=(await cleanImage(bytesFromData(s.image))).src}const img=next.current.image?await decode(next.current.image):null;if(!confirm(`현재 편집과 템플릿 목록을 백업의 ${next.templates.length}개로 바꿀까요? 기존 작업이 필요하면 취소 후 JSON 백업을 먼저 받아 주세요.`))return;await prepareFont(next.current.font);const blocked=storageBlocked;storageBlocked=false;try{persist(next)}catch(e){storageBlocked=blocked;throw e}state=next.current;templates=next.templates;image=img;selected=null;sync();list();status(`${templates.length}개 템플릿과 편집 내용을 복원했어요.`)})};
 async function init(){try{const saved=localStorage.getItem(KEY);if(saved){const d=validateBackup(JSON.parse(saved));for(const s of [d.current,...d.templates.map(t=>t.state)])if(s.image)checkImage(bytesFromData(s.image));image=d.current.image?await decode(d.current.image):null;state=d.current;templates=d.templates}}catch{storageBlocked=true;status('저장 데이터를 읽을 수 없어요. 원본은 덮어쓰지 않았어요. 정상 JSON 백업을 복원해 주세요.',true)}sync();list()}
-await init();
+await busy(async()=>{await init();try{await prepareFont(state.font);render()}catch(error){status(error.message+' 현재 미리보기는 대체 글꼴로 표시될 수 있어요.',true)}});

@@ -18,7 +18,7 @@ Vercel 공개 배포 완료: https://skt-aleph-project-3-studio.vercel.app
 
 ## 실행 명령
 
-`npm start` → http://127.0.0.1:8003. `npm test`. `npm run build`는 원본 public 6개 파일을 배포 디렉터리 dist에 복사한다. Vercel은 `npm test && npm run build` 실행 뒤 dist를 배포한다. API 키 불필요.
+`npm start` → http://127.0.0.1:8003. `npm test`. `npm run build`는 public의 앱 파일과 폰트·라이선스를 배포 디렉터리 dist에 복사한다. Vercel은 `npm test && npm run build` 실행 뒤 dist를 배포한다. API 키 불필요.
 
 ## 통과 검사
 

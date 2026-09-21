@@ -34,4 +34,19 @@ https://aleph-omega.vercel.app/manual/student-free 의 v6(2026-09-18), 제2부�
 
 ## 계정 상태
 
-Vercel 연결 도구의 peter-ahns-projects 접근은 403 권한 오류. 공식 CLI 59.23.2 설치 및 로그인 요청 진행 중이다. 이 상태는 자동 승인 거절이 아니라 Vercel 계정 인증 문제다. 로그인 토큰은 저장소나 문서에 보관하지 않는다.
+Vercel 연결 도구의 peter-ahns-projects 접근은 403 권한 오류였으며, 사용자 승인으로 공식 CLI 59.23.2 로그인을 완료했다. Hobby 팀 확인 후 프로젝트를 연결·배포했다. 로그인 토큰은 저장소나 문서에 보관하지 않는다. CLI가 생성한 .env.local은 Git과 Vercel 업로드 모두에서 제외한다.
+
+## 실제 배포 결과
+
+- 공개 주소: https://skt-aleph-project-3-studio.vercel.app
+- 상태: READY, production, Framework Other(정적 사이트).
+- 프로젝트: skt-aleph-project-3-studio, Hobby 팀 peter-ahns-projects.
+- 배포 ID: dpl_AoGMAGRjuo2kjcW7wXb9fh6yuU4D.
+- 검증 기준 소스: b037f9cb28554d8f6b59adaab032f67c3f5b11d3.
+- 원격 빌드 5초, 후처리 6초(Vercel inspect 확인).
+- GitHub 저장소가 프로젝트에 연결되어 있음을 CLI에서 확인. 이후 main 변경은 Git 연결을 통해 배포 가능.
+- 새 비로그인 격리 Chromium에서 production 주소 HTTP 200, 기본 시스템 테마 확인. 다크 선택→새로고침 후 유지. 전체 브라우저 assertion 30건 PASS(qa/vercel-browser-results.json).
+- 제출 소스 전체 커밋 URL을 GitHub 비로그인 상태에서 확인(qa/vercel-source-access.json).
+- 서버 런타임을 사용하지 않는 정적 사이트이며 별도 로그 드레인·상시 모니터링은 구성하지 않았다.
+
+이전 Sites 호스팅은 과거 버전 보관용이며 제출/앞으로의 변경 기준은 Vercel이다. 주소가 바뀌면 브라우저 저장공간도 달라진다. 기존 작업은 이전 주소에서 JSON 백업 후 새 주소에서 복원한다.

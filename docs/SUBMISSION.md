@@ -2,16 +2,16 @@
 
 ## 결과물 URL (필수)
 
-https://jjal-card-studio-aleph.ahs3810.chatgpt.site
+https://skt-aleph-project-3-studio.vercel.app
 
 ## 소스 저장소 URL
 
-https://github.com/PeterAhnn/SKT-ALEPH-Project-3-Studio/commit/dda2b9f82703db7616b2428744725a5736dbe8db
+https://github.com/PeterAhnn/SKT-ALEPH-Project-3-Studio/commit/b037f9cb28554d8f6b59adaab032f67c3f5b11d3
 
 ## 재현·통과 확인 4가지
 
 ```text
-어디로 가나요: https://jjal-card-studio-aleph.ahs3810.chatgpt.site 의 짤·카드 스튜디오 편집기.
+어디로 가나요: https://skt-aleph-project-3-studio.vercel.app 의 짤·카드 스튜디오 편집기.
 무엇을 하나요(3단계 이내): 1) PNG/JPEG를 불러오고 문구·위치·크기·색을 바꿉니다. 2) 1:1·4:5·9:16을 골라 PNG를 내려받습니다. 3) 템플릿을 저장하고 새로고침 뒤 불러옵니다.
 무엇이 보이면 통과: 미리보기와 파일의 이미지 잘림·문구 위치·줄바꿈이 같고, 저장한 템플릿이 새로고침 후에도 보입니다.
 안 될 때: 지원하지 않는 파일·손상 JSON은 이유가 표시되고 기존 작업이 유지됩니다. PNG/JPEG 또는 이 편집기에서 백업한 정상 JSON으로 다시 시도합니다.
@@ -20,7 +20,7 @@ https://github.com/PeterAhnn/SKT-ALEPH-Project-3-Studio/commit/dda2b9f82703db761
 ## AI와 내 판단 3줄
 
 ```text
-AI에게 맡긴 일: 편집기 구현, 세 화면비와 이미지 저장, 템플릿·JSON 복원, 극단 입력 검사와 이모지 줄바꿈 결함 수정.
+AI에게 맡긴 일: 편집기와 시스템·라이트·다크 테마 구현, 세 화면비와 이미지 저장, 템플릿·JSON 복원, 극단 입력 검사와 이모지 결함 수정, Vercel 배포.
 내가 판단한 일: 기본 테마는 시스템 설정을 따르게 하고, 라이트·다크 전환 기능을 추가하도록 결정했다.
 AI 말을 안 들은 일: AI가 선택한 Sites 배포를 그대로 사용하지 않고, 매뉴얼에 안내된 서비스에 맞춰 Vercel 배포로 변경하도록 요청했다.
 ```

@@ -83,3 +83,5 @@ Vercel 공개 재검증: 코드 커밋 080d1047577b944727f246b7a313a00e4cf2bd4a,
 2026-09-21: 상단의 JSON 버튼을 내 템플릿 영역으로 이동했다. 「작업 백업 다운로드」「백업 파일 가져오기」로 표시하고 .json은 설명에 남겼다. 파일 전체 검증 후 이름·개수·문구·화면비와 전체 교체 안내를 보여준다. 확인 단계에서는 저장하지 않으며 「이 내용으로 복원」을 눌러야 적용한다. 오류는 같은 영역에서 거부 이유와 기존 작업 보존을 안내한다.
 
 로컬 검사: Node 29건 PASS, 기존 편집 검사 30건 PASS(qa/backup-regression-local.json), 폰트 검사 41건 PASS(qa/backup-fonts-local.json). 새 흐름 12건 PASS(qa/backup-flow-local.json): 위치, 선택만으로 무변경, 복원 요약, 이름의 HTML 비실행, 교체 안내·포커스, 취소 보존, 손상 거부·이전 후보 해제, 오래된 후보 적용 불가, 필수 누락 거부, 저장 공간 오류 보존, 명시적 전체 복원, 템플릿 0개 표시. 저장 실패는 Storage.setItem 오류를 실제 주입해 확인했다. 라이트와 390×844 다크 화면을 시각 확인했고 문서 폭 390px로 가로 넘침이 없었다. qa/backup-panel-light.png, qa/backup-panel-mobile-dark.png 보관.
+
+Vercel 배포 dpl_Dv5usdA5T5hNPyfL6CPDg3gDgu6N READY, 코드 커밋 970fd17617562627a1840b36d45208069fa3e5e9. 공개 도메인에서 같은 새 흐름 12건 PASS(qa/backup-flow-public.json). 실제 새로고침 뒤 복원 문구·템플릿 2개 유지, 미적용 확인 화면은 닫힘(qa/backup-reload-public.json). 비로그인 격리 QA 컨텍스트를 재사용하여 공개 편집기와 전체 GitHub 커밋 제목·로그인 링크를 확인했다.

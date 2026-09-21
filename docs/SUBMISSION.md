@@ -6,7 +6,7 @@ https://skt-aleph-project-3-studio.vercel.app
 
 ## 소스 저장소 URL
 
-https://github.com/PeterAhnn/SKT-ALEPH-Project-3-Studio/commit/080d1047577b944727f246b7a313a00e4cf2bd4a
+https://github.com/PeterAhnn/SKT-ALEPH-Project-3-Studio/commit/970fd17617562627a1840b36d45208069fa3e5e9
 
 ## 재현·통과 확인 4가지
 

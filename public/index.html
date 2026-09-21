@@ -1,7 +1,7 @@
 <!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="사진 한 장, 나다운 한 줄. 로그인 없이 만드는 짤·카드 스튜디오."><meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self'; script-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><title>짤·카드 스튜디오 — 한 장으로 말해요</title><link rel="stylesheet" href="style.css"><script type="module" src="app.js"></script></head>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="사진 한 장, 나다운 한 줄. 로그인 없이 만드는 짤·카드 스튜디오."><meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self'; script-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><title>짤·카드 스튜디오 — 한 장으로 말해요</title><meta name="color-scheme" content="light dark"><script src="theme.js"></script><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="theme.css"><script type="module" src="app.js"></script></head>
 <body>
-<header class="topbar"><a class="brand" href="./"><span class="brand-icon">✳</span> 짤·카드 <b>스튜디오</b></a><span class="privacy"><i></i> 로그인 없이, 내 브라우저에서</span><button id="backup" class="quiet">JSON 백업 ↗</button><label class="quiet file-label">JSON 복원<input id="restore" type="file" accept=".json,application/json"></label></header>
+<header class="topbar"><a class="brand" href="./"><span class="brand-icon">✳</span> 짤·카드 <b>스튜디오</b></a><span class="privacy"><i></i> 로그인 없이, 내 브라우저에서</span><label class="theme-control" for="theme-select"><span>화면 테마</span><select id="theme-select" aria-label="화면 테마"><option value="system">시스템</option><option value="light">라이트</option><option value="dark">다크</option></select></label><button id="backup" class="quiet">JSON 백업 ↗</button><label class="quiet file-label">JSON 복원<input id="restore" type="file" accept=".json,application/json"></label></header>
 <main>
 <section class="intro"><div><p class="eyebrow">A LITTLE IMAGE. A LOT TO SAY.</p><h1>사진 한 장,<br class="mobile-break"> <span>나다운 한 줄.</span></h1><p class="subtitle">머릿속 한마디를 꺼내서, 저장하고 나눠요.</p></div><div class="intro-note">오늘의 기분도<br>한 장이면 충분해요 <span>↙</span></div></section>
 <div class="studio">
@@ -27,4 +27,3 @@
 <p id="status" class="status" role="status" aria-live="polite">준비됐어요. 문구부터 바꿔 볼까요?</p>
 <footer><span>✳ 짤·카드 스튜디오</span><p>이미지는 외부 서버로 전송하지 않아요. 직접 만든 사진이나 사용 권한이 있는 이미지를 사용해 주세요.</p><span>MADE FOR YOUR MOMENT</span></footer>
 </main></body></html>
-

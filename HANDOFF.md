@@ -12,7 +12,7 @@ Vercel 공개 배포 완료: https://skt-aleph-project-3-studio.vercel.app
 
 공개 GitHub: https://github.com/PeterAhnn/SKT-ALEPH-Project-3-Studio
 
-최신 배포 검증 기준 커밋: b037f9cb28554d8f6b59adaab032f67c3f5b11d3. 시스템(기본)/라이트/다크 화면 테마 구현, Node 검사 25건, Vercel 브라우저 검사 30건 PASS. 공개 편집기와 전체 커밋 주소의 새 비로그인 격리 브라우저 확인 완료. docs/DEPLOYMENT.md, QA.md, SUBMISSION.md 참고.
+최신 배포 검증 기준 커밋: 080d1047577b944727f246b7a313a00e4cf2bd4a. 시스템(기본)/라이트/다크 화면 테마와 OFL 한글 폰트 7종 추가. 기존 기기 글꼴 3종 유지. Node 29건, 로컬 기존 브라우저 검사 30건, 로컬·Vercel 폰트 브라우저 검사 각각 41건 PASS. Vercel에서 새로고침 후 선택 글꼴과 템플릿 복원 확인. 비로그인 브라우저에서 편집기·폰트 안내·전체 커밋 주소 접근 확인. docs/FONTS.md, QA.md, SUBMISSION.md 참고.
 
 사용자 요청으로 Sites에서 Vercel로 이전했다. .openai/hosting.json과 sites Git remote는 과거 배포 기록이므로 이번 프로젝트를 Sites로 다시 배포하지 않는다. 새 배포는 vercel.json을 사용하고 .vercel/project.json의 기존 프로젝트를 재사용한다. 이전 Sites의 저장 자료는 JSON 백업/복원으로 이동한다.
 

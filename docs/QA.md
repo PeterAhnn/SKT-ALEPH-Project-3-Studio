@@ -75,3 +75,5 @@ Sites 기본 패키징 스크립트는 이 Windows의 bash 실행 파일 부재�
 2026-09-21: 공식 배포본과 OFL 1.1 고지를 함께 포함했다. 선정 근거·파일·원본 리비전은 FONTS.md. Node 검사 29건 PASS. 로컬 전용 브라우저(127.0.0.1:8005)에서 fonts-browser.js 41건 PASS, 기존 browser.js 30건 PASS. 원본은 qa/fonts-browser-results.json, qa/fonts-regression-results.json.
 
 7종 각각 실제 FontFace 로드, 세 화면비 PNG 전체 픽셀 일치, JPEG 디코딩을 확인했다. 폰트 전송 실패를 주입했을 때 이전 글꼴·저장 JSON·캔버스가 보존되었다. 템플릿과 JSON의 새 폰트 ID 복원도 통과했다. 실제 새로고침 후 나눔손글씨 펜 로드와 템플릿 1개 유지 확인. qa/fonts-contact.png의 7종 글자 모양을 시각 확인했다. 폰트 검사의 첫 실패는 공백이 있는 FontFace.family가 따옴표로 직렬화되는 검사 코드 문제였으며 실제 폰트 로드는 성공했다. 비교 시 따옴표를 정규화한 뒤 전체 재검사했다.
+
+Vercel 공개 재검증: 코드 커밋 080d1047577b944727f246b7a313a00e4cf2bd4a, 배포 dpl_2SceWnD8xChYxWx1TGAZXoHTEk7o READY. 공개 도메인에서 폰트 브라우저 검사 41건 PASS(qa/public-fonts-results.json). 실제 새로고침 후 나눔손글씨 펜 로드 완료·다운로드 활성·기존 2개와 추가 1개의 템플릿 유지(qa/public-fonts-reload.json). 비로그인 browse 컨텍스트에서 편집기, /fonts/licenses.html, GitHub 전체 커밋의 제목과 로그인 링크를 확인했다. 이번 확인은 기존 격리 QA 컨텍스트를 재사용했으며 새 시크릿 생성 검사와 구분한다.

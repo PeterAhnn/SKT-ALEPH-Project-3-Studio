@@ -4,7 +4,9 @@ SKT ALEPH 과제 3. 사진과 한글 문구로 밈·카드·SNS 이미지를 만
 
 ## 실행
 
-Node.js 22 이상에서 `npm start` 후 http://127.0.0.1:8003 접속. 외부 패키지 설치와 API 키가 필요 없다. 정적 호스팅 디렉터리는 `public`이다.
+공개 편집기: https://jjal-card-studio-aleph.ahs3810.chatgpt.site
+
+Node.js 22 이상에서 `npm start` 후 http://127.0.0.1:8003 접속. 외부 패키지 설치와 API 키가 필요 없다. 원본은 `public`이며 `npm run build`로 정적 파일 4개를 `dist`에 복사해 배포한다.
 
 ## 기능
 

@@ -2,16 +2,16 @@
 
 ## 결과물 URL (필수)
 
-미완료 — 공개 배포와 새 시크릿 접근 확인 후 실제 HTTPS 주소 입력.
+https://jjal-card-studio-aleph.ahs3810.chatgpt.site
 
 ## 소스 저장소 URL
 
-미완료 — 공개 GitHub 저장소 준비 후 실제 전체 커밋 주소 입력. 형식: `https://github.com/OWNER/REPO/commit/FULL_COMMIT`.
+https://github.com/PeterAhnn/SKT-ALEPH-Project-3-Studio/commit/dda2b9f82703db7616b2428744725a5736dbe8db
 
 ## 재현·통과 확인 4가지
 
 ```text
-어디로 가나요: 결과물 URL의 짤·카드 스튜디오 편집기.
+어디로 가나요: https://jjal-card-studio-aleph.ahs3810.chatgpt.site 의 짤·카드 스튜디오 편집기.
 무엇을 하나요(3단계 이내): 1) PNG/JPEG를 불러오고 문구·위치·크기·색을 바꿉니다. 2) 1:1·4:5·9:16을 골라 PNG를 내려받습니다. 3) 템플릿을 저장하고 새로고침 뒤 불러옵니다.
 무엇이 보이면 통과: 미리보기와 파일의 이미지 잘림·문구 위치·줄바꿈이 같고, 저장한 템플릿이 새로고침 후에도 보입니다.
 안 될 때: 지원하지 않는 파일·손상 JSON은 이유가 표시되고 기존 작업이 유지됩니다. PNG/JPEG 또는 이 편집기에서 백업한 정상 JSON으로 다시 시도합니다.

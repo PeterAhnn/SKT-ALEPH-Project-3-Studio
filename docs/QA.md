@@ -85,3 +85,15 @@ Vercel 공개 재검증: 코드 커밋 080d1047577b944727f246b7a313a00e4cf2bd4a,
 로컬 검사: Node 29건 PASS, 기존 편집 검사 30건 PASS(qa/backup-regression-local.json), 폰트 검사 41건 PASS(qa/backup-fonts-local.json). 새 흐름 12건 PASS(qa/backup-flow-local.json): 위치, 선택만으로 무변경, 복원 요약, 이름의 HTML 비실행, 교체 안내·포커스, 취소 보존, 손상 거부·이전 후보 해제, 오래된 후보 적용 불가, 필수 누락 거부, 저장 공간 오류 보존, 명시적 전체 복원, 템플릿 0개 표시. 저장 실패는 Storage.setItem 오류를 실제 주입해 확인했다. 라이트와 390×844 다크 화면을 시각 확인했고 문서 폭 390px로 가로 넘침이 없었다. qa/backup-panel-light.png, qa/backup-panel-mobile-dark.png 보관.
 
 Vercel 배포 dpl_Dv5usdA5T5hNPyfL6CPDg3gDgu6N READY, 코드 커밋 970fd17617562627a1840b36d45208069fa3e5e9. 공개 도메인에서 같은 새 흐름 12건 PASS(qa/backup-flow-public.json). 실제 새로고침 뒤 복원 문구·템플릿 2개 유지, 미적용 확인 화면은 닫힘(qa/backup-reload-public.json). 비로그인 격리 QA 컨텍스트를 재사용하여 공개 편집기와 전체 GitHub 커밋 제목·로그인 링크를 확인했다.
+
+## 후속 검토에서 발견한 다섯 문제 수정
+
+2026-09-21. 검토 원본 qa/requirements-review-2026-09-21.md와 review-*-results.json을 유지한다. 저장 구조·이전·상한·검사 실행법은 STORAGE.md.
+
+- 큰 JPEG 템플릿 세 번째 저장 실패 → IndexedDB 이미지 별도 저장·중복 제거·문서와 원자적 저장. 서로 다른 1200×1200 JPEG 3개(각 약 1.26MB), 같은 사진 네 번째 템플릿, 수정/삭제가 모두 성공했다. 새로고침 후 사진 자산 3개·템플릿 3개·수정 문구 유지.
+- JPEG 반복 복원 시 픽셀 변화 → 무손실 PNG로 정규화·보관. 백업 v2에 사진 중복을 제거하고 v1도 읽는다. 두 번 반복 복원 후 Canvas 전체 RGBA가 각각 동일했다.
+- 손상 원본 대신 빈 백업 → 정상 백업 차단·손상 원본 다운로드. 새 IndexedDB와 이전 localStorage의 손상 원본을 모두 검사했다. 이전 문자열은 정확히 같고 새 복구 JSON의 사진과 템플릿도 같았다. 정상 백업 복원 후 저장 재개. 실패한 이전은 새 DB에 부분 기록을 남기지 않았다.
+- 모바일 첫 화면 도구 없음 → 사진·위/아래 문구를 위로 이동, 상세 설정 접기. 390×844에서 이미지 입력 y≈220~314, 위 문구 y≈482~542, 아래 문구 y≈586~646로 모두 보임. qa/v2-mobile.png 시각 확인.
+- 80줄 입력 3px 무안내 → 실제 저장 크기와 가독성 경고를 입력 옆과 미리보기에 표시. 160자 원문 유지. 24px는 앱 안내 기준이며 보편적인 가독성 표준이라는 주장은 아니다.
+
+로컬 최신 결과: Node 33건 PASS, 기존 편집 30건(qa/v2-browser-results.json), 폰트 41건(qa/v2-fonts-results.json), 복원 UI·트랜잭션 실패 12건(qa/v2-backup-atomic-final.json), 큰 사진/반복 복원/경고 13건(qa/v2-storage-results.json), 실제 재접속 이전 4건(qa/v2-migration.json), 새 저장소 손상 복구 4건(qa/v2-recovery.json), 이전 저장소 손상 보호 4건(qa/v2-legacy-recovery.json), 이미지 경계 2건(qa/v2-image-boundary.json) PASS. 큰 이미지 검사 후 실제 reload 결과는 qa/v2-storage-reload.json. 공개 재검증 전 결과와 구분한다.

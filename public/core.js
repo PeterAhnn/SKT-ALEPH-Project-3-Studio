@@ -9,7 +9,7 @@ export function validateState(s){
   for(const [key,max] of [['headline',160],['caption',240]])if(typeof s[key]!=='string'||s[key].length>max)fail(`${key} 문구가 없거나 너무 길어요.`);
   for(const [key,min,max] of [['size',28,120],['shade',0,70],['top',0,70],['bottom',30,100]])if(!Number.isFinite(s[key])||s[key]<min||s[key]>max)fail(`${key} 값이 허용 범위를 벗어났어요.`);
   if(typeof s.outline!=='boolean'||!/^#[a-f0-9]{6}$/i.test(s.color))fail('글자 색 또는 테두리 값이 올바르지 않아요.');
-  if(s.image!==null&&(typeof s.image!=='string'||s.image.length>5*1024*1024||!/^data:image\/(png|jpeg);base64,[A-Za-z0-9+/]+=*$/.test(s.image)))fail('이미지는 PNG·JPEG 데이터만 복원할 수 있어요.');
+  if(s.image!==null&&(typeof s.image!=='string'||s.image.length>24*1024*1024||!/^data:image\/(png|jpeg);base64,[A-Za-z0-9+/]+=*$/.test(s.image)))fail('이미지는 PNG·JPEG 데이터만 복원할 수 있어요.');
   return Object.fromEntries(Object.keys(DEFAULT).map(k=>[k,s[k]]));
 }
 export function validateBackup(raw){
@@ -45,9 +45,9 @@ export function dimensions(bytes){
   }
   fail('지원하지 않거나 손상된 파일이에요. 실제 PNG·JPEG 파일을 골라 주세요.');
 }
-export function checkImage(bytes){
+export function checkImage(bytes,maxBytes=MAX_FILE){
   if(!bytes.length)fail('빈 파일은 불러올 수 없어요.');
-  if(bytes.length>MAX_FILE)fail('12MB 이하 이미지를 골라 주세요.');
+  if(bytes.length>maxBytes)fail('이미지 파일의 허용 크기를 넘었어요.');
   const info=dimensions(bytes);
   if(!info.width||!info.height||info.width>16000||info.height>16000||info.width*info.height>24000000)fail('이미지가 너무 크거나 크기 정보가 잘못됐어요. 최대 2,400만 화소예요.');
   return info;

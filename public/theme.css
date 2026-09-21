@@ -38,3 +38,4 @@
 [data-theme=dark] .backup-status.error{background:#3b242a;border-color:#95525a;color:#ffccd0}
 @media(max-width:1120px){.topbar{gap:12px}.privacy{font-size:10px;margin-left:auto}.topbar label.theme-control>span{display:none}}
 @media(max-width:720px){.topbar{gap:8px 14px}.brand{flex-basis:100%}.topbar label.theme-control{margin-right:auto}.topbar label.theme-control>span{display:inline}.theme-control select{width:88px}}
+[data-theme=dark] #advanced-options summary{color:#dec8f4}[data-theme=dark] .readability-warning,[data-theme=dark] .recovery-note,[data-theme=dark] #save-status.error{background:#3a2c21;color:#f4d0a2;border-color:#806243}

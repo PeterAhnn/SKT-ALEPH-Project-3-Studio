@@ -1,0 +1,26 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {DEFAULT,validateBackup,validateState,checkImage,wrapText} from '../public/core.js';
+const valid=()=>({version:1,current:{...DEFAULT},templates:[{id:'one',name:'첫 카드',state:{...DEFAULT}}]});
+test('복합 이모지를 줄 사이에서 쪼개지 않는다',()=>{
+  const family='👨‍👩‍👧‍👦';
+  const lines=wrapText({measureText:s=>({width:Array.from(s).length})},family+family,8);
+  assert.deepEqual(lines,[family,family]);
+});
+test('정상 백업 검증',()=>assert.deepEqual(validateBackup(valid()),valid()));
+test('문법 손상 거부',()=>assert.throws(()=>JSON.parse('{"version":')));
+test('필수 편집 항목 누락 거부',()=>{const x=valid();delete x.current.color;assert.throws(()=>validateBackup(x))});
+test('필수 템플릿 이름 누락 거부',()=>{const x=valid();delete x.templates[0].name;assert.throws(()=>validateBackup(x))});
+test('중복 ID 거부',()=>{const x=valid();x.templates.push(x.templates[0]);assert.throws(()=>validateBackup(x))});
+test('원격 이미지 복원 거부',()=>assert.throws(()=>validateState({...DEFAULT,image:'https://example.com/image.png'})));
+test('SVG 이미지 복원 거부',()=>assert.throws(()=>validateState({...DEFAULT,image:'data:image/svg+xml;base64,PHN2Zz4='})));
+test('잘못된 화면비 거부',()=>assert.throws(()=>validateState({...DEFAULT,ratio:'wide'})));
+test('최대 길이 문구 허용',()=>assert.equal(validateState({...DEFAULT,headline:'가'.repeat(160)}).headline.length,160));
+test('초과 길이 문구 거부',()=>assert.throws(()=>validateState({...DEFAULT,headline:'가'.repeat(161)})));
+test('숫자 범위와 비유한 값 거부',()=>{for(const n of [-1,121,NaN,Infinity])assert.throws(()=>validateState({...DEFAULT,size:n}))});
+test('빈 파일 거부',()=>assert.throws(()=>checkImage(new Uint8Array())));
+test('위장 PNG 거부',()=>assert.throws(()=>checkImage(new TextEncoder().encode('<svg>not png</svg>'))));
+test('초과 파일 거부',()=>assert.throws(()=>checkImage(new Uint8Array(12*1024*1024+1))));
+test('화소 폭탄 거부',()=>{const b=new Uint8Array(24);b.set([137,80,78,71,13,10,26,10]);const d=new DataView(b.buffer);d.setUint32(16,16000);d.setUint32(20,16000);assert.throws(()=>checkImage(b))});
+test('미지 속성은 복원 결과에 포함하지 않는다',()=>{const s=validateState({...DEFAULT,secret:'untrusted'});assert.equal(s.secret,undefined)});
+test('3개 템플릿의 내용과 ID가 왕복 후 같다',()=>{const x=valid();x.templates=['a','b','c'].map(id=>({id,name:id,state:{...DEFAULT,headline:id}}));assert.deepEqual(validateBackup(JSON.parse(JSON.stringify(x))),x)});

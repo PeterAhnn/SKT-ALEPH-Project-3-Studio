@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="사진 한 장, 나다운 한 줄. 로그인 없이 만드는 짤·카드 스튜디오."><meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self'; script-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><title>짤·카드 스튜디오 — 한 장으로 말해요</title><link rel="stylesheet" href="style.css"><script type="module" src="app.js"></script></head>
+<body>
+<header class="topbar"><a class="brand" href="./"><span class="brand-icon">✳</span> 짤·카드 <b>스튜디오</b></a><span class="privacy"><i></i> 로그인 없이, 내 브라우저에서</span><button id="backup" class="quiet">JSON 백업 ↗</button><label class="quiet file-label">JSON 복원<input id="restore" type="file" accept=".json,application/json"></label></header>
+<main>
+<section class="intro"><div><p class="eyebrow">A LITTLE IMAGE. A LOT TO SAY.</p><h1>사진 한 장,<br class="mobile-break"> <span>나다운 한 줄.</span></h1><p class="subtitle">머릿속 한마디를 꺼내서, 저장하고 나눠요.</p></div><div class="intro-note">오늘의 기분도<br>한 장이면 충분해요 <span>↙</span></div></section>
+<div class="studio">
+<aside class="panel editor"><div class="section-title"><span class="step">01</span><h2>재료 고르기</h2></div>
+<label class="upload-zone" id="dropzone"><input id="upload" type="file" accept="image/png,image/jpeg"><span class="upload-icon">＋</span><strong>이미지를 놓거나 눌러서 선택</strong><small>PNG · JPG / 최대 12MB · 2,400만 화소</small></label><p id="image-name" class="hint">사진이 없어도 괜찮아요. 아래 배경으로 시작하세요.</p>
+<div class="backgrounds" aria-label="기본 배경"><button data-preset="lilac" class="swatch lilac" aria-label="라일락 배경" aria-pressed="true">✳</button><button data-preset="peach" class="swatch peach" aria-label="살구 배경" aria-pressed="false">☀</button><button data-preset="night" class="swatch night" aria-label="밤하늘 배경" aria-pressed="false">✦</button><button id="remove-image" class="quiet">사진 지우기</button></div>
+<div class="section-title divider"><span class="step">02</span><h2>한마디 얹기</h2></div>
+<label for="headline">위 문구 <span id="headline-count" class="count">0 / 160</span></label><textarea id="headline" rows="2" maxlength="160" placeholder="지금 떠오르는 한마디"></textarea>
+<label for="caption">아래 문구 <span id="caption-count" class="count">0 / 240</span></label><textarea id="caption" rows="2" maxlength="240" placeholder="작은 덧붙임도 좋아요"></textarea>
+<div class="two-col"><div><label for="font">글꼴</label><select id="font"><option value="sans">단단한 고딕</option><option value="serif">차분한 명조</option><option value="mono">또박또박</option></select></div><div><label for="align">정렬</label><select id="align"><option value="center">가운데</option><option value="left">왼쪽</option><option value="right">오른쪽</option></select></div></div>
+<label for="size">글자 크기 <output id="size-value">80</output></label><input id="size" type="range" min="28" max="120" value="80">
+<div class="two-col"><div><label for="top">위 문구 위치</label><input id="top" type="range" min="0" max="70" value="9"></div><div><label for="bottom">아래 문구 위치</label><input id="bottom" type="range" min="30" max="100" value="84"></div></div><div class="color-line"><label for="color">글자 색</label><input id="color" type="color" value="#262238"><label class="check"><input id="outline" type="checkbox"> 테두리</label></div>
+<div id="image-options"><label for="fit">사진 배치</label><select id="fit"><option value="cover">꽉 채우기 (가운데 자르기)</option><option value="contain">사진 전체 보기</option></select><label for="shade">사진 어둡게 <output id="shade-value">0%</output></label><input id="shade" type="range" min="0" max="70" value="0"></div>
+</aside>
+<section class="preview-panel" aria-label="미리보기"><div class="preview-toolbar"><span class="live"><i></i> 실시간 미리보기</span><button id="reset" class="quiet">처음으로 ↺</button></div>
+<div class="ratio-tabs" aria-label="화면비"><button data-ratio="square" aria-pressed="true">정사각 <span>1:1</span></button><button data-ratio="portrait" aria-pressed="false">세로 <span>4:5</span></button><button data-ratio="story" aria-pressed="false">스토리 <span>9:16</span></button></div>
+<div class="canvas-stage"><canvas id="canvas" width="1080" height="1080" role="img" aria-label="문구와 배경이 합성된 이미지 미리보기"></canvas></div>
+<div class="canvas-meta"><span id="dimensions">1080 × 1080 px</span><span>보이는 그대로 저장돼요</span></div><p id="fit-note" class="hint center">긴 문구는 이미지 안에 들어오도록 자동으로 작아져요.</p>
+<div class="download-bar"><div><p class="eyebrow">READY TO SHARE?</p><strong>이 한 장, 가져가세요.</strong></div><div class="download-controls"><select id="format" aria-label="내려받기 형식"><option value="png">PNG</option><option value="jpeg">JPEG</option></select><button id="download" class="primary">이미지 내려받기 <span>↓</span></button></div></div>
+</section>
+<aside class="panel library"><div class="section-title"><span class="step">03</span><h2>다음에도 꺼내 쓰기</h2></div><p class="hint">지금 만든 사진과 문구를<br>내 템플릿으로 보관해요.</p><label for="template-name">템플릿 이름</label><input id="template-name" type="text" maxlength="40" placeholder="예: 월요일의 나"><button id="save-template" class="secondary">＋ 새 템플릿 저장</button><button id="update-template" class="quiet full" disabled>선택한 템플릿 덮어쓰기</button><div class="library-title"><h3>내 템플릿</h3><span id="template-count">0 / 12</span></div><div id="templates"></div><div class="local-note"><span>⌂</span><strong>이 브라우저에만 보관해요</strong><p>다른 기기에서는 JSON 백업을 복원하세요. 브라우저 데이터를 지우면 템플릿도 사라져요.</p></div></aside>
+</div>
+<p id="status" class="status" role="status" aria-live="polite">준비됐어요. 문구부터 바꿔 볼까요?</p>
+<footer><span>✳ 짤·카드 스튜디오</span><p>이미지는 외부 서버로 전송하지 않아요. 직접 만든 사진이나 사용 권한이 있는 이미지를 사용해 주세요.</p><span>MADE FOR YOUR MOMENT</span></footer>
+</main></body></html>
+

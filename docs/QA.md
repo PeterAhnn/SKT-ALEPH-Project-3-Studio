@@ -59,12 +59,12 @@ qa/public-browser-results.json: 배포 환경 브라우저 assertion 30건 전�
 
 Sites 기본 패키징 스크립트는 이 Windows의 bash 실행 파일 부재로 실행되지 않았다. 같은 패키지의 prepare-site-build.cjs로 정적 출력 및 manifest를 검증·정규화한 후 Windows tar로 dist만 묶었다. 아카이브 목록을 확인했고 Sites가 정적 파일 5개를 받아 배포 성공했다.
 
-## 아직 완료로 표시하지 않는 항목
+## 실제 사용자 판단과 확인 범위
 
 - C32: 2026-09-21 후속 요청에서 사용자가 시스템 기본 테마·수동 전환·Vercel 배포를 직접 결정했다. Sites 배포를 수정하도록 요청한 사실을 포함해 SUBMISSION.md의 실제 판단 세 줄을 작성했다.
-- C27: 자체 제작의 구현 근거는 기록했으나 사용자의 최종 완성본 확인은 아직 받지 않았다.
+- C27: 프로젝트 Canvas 도형으로 자체 합성한 제작 근거를 ASSETS.md에 기록했다. AI 구현 결과이며 사용자가 직접 그린 것으로 표기하지 않는다. 사용자 최종 완성본 확인은 아직 기록하지 않았다.
 
-완주와 제출 준비를 구분한다. 최종 완성본 사용자 검토가 미완료인 동안 과제 전체 완주로 표시하지 않는다.
+자동 검증과 사용자 직접 확인을 구분한다. 사용자 최종 검토를 과제에 없는 별도 승인 요건으로 추가하지 않으며, 실제로 하지 않은 확인을 완료로 표시하지 않는다.
 
 ## 후속 변경 — 다크 테마와 Vercel 이전
 
@@ -101,3 +101,13 @@ Vercel 배포 dpl_Dv5usdA5T5hNPyfL6CPDg3gDgu6N READY, 코드 커밋 970fd1761756
 공개 재검증: Vercel dpl_H7hCLd8n8Ku2h6WDKoGKiTQZRJtC READY, 앱 커밋 757e14a97d9121bc6e994561a35477414e67c5e9. 기존 browse 종료 후 새 headless Chromium 격리 컨텍스트를 시작했다. 시작 중 CLI 탐색 타임아웃이 있었으나 실제 새 탭의 공개 편집기 정상 로드·빈 저장소를 확인한 뒤 검사를 수행했다(qa/v2-public-first-open.json). 로그인·쿠키 가져오기를 하지 않았다. 결과물과 GitHub 전체 커밋은 인증 없이 열렸고 소스 커밋 제목·로그인 링크를 확인했다(qa/v2-public-source.json). 실제 GUI 시크릿 창 수동 조작과 구분한다.
 
 공개 편집 30건, 폰트 41건, 백업 12건, 큰 사진·반복 복원 13건 PASS: qa/v2-public-browser.json, v2-public-fonts.json, v2-public-backup.json, v2-public-storage.json. 새로고침 후 사진 자산 3개·템플릿 3개·수정 문구와 저장 완료 상태 유지(v2-public-reload.json). 390×844 모바일 다크 화면에서 핵심 입력 3개 모두 첫 화면 안에 있고 가로 넘침 없음(v2-public-mobile.json, v2-public-mobile-dark.png). 위 변경으로 사용자의 최종 완성 이미지 검토를 대신 완료 처리하지 않는다.
+
+## 제출 준비 재확인 — 2026-09-21
+
+학생용 매뉴얼 v6(2026-09-18)을 공개 페이지에서 확인했다. T03 개별 안내에 따라 실제 제출 문안은 결과물·소스 URL, 확인 4줄, 판단 3줄만 남겼다. docs/SUBMISSION-READY.txt는 복사용, docs/VERIFICATION-REPORT.md와 output/pdf/T03-verification-report.pdf는 별도 보관용이다. PDF는 허용 형식이나 T03 필수 첨부물은 아니다. 검증된 앱 커밋 757e14a97d9121bc6e994561a35477414e67c5e9는 그대로 유지했다.
+
+Node 33건을 다시 실행하여 모두 PASS(qa/submission-node-tests.txt). 공개 96건과 로컬 이전·복구·경계 14건의 기존 결과 파일을 대조했다. 이 수치는 자동 검사이며 사용자 수동 검사 횟수가 아니다.
+
+C15 보강: 기존 실제 수정 전후 검사는 가족 이모지 두 개의 단위 입력이었다. 12건 검사표 E04와 정확히 같은 입력의 비교를 남기기 위해 tests/browser.js에서 144 UTF-16자(36 grapheme)를 추출했다. 제출 준비 중 옛 Array.from 알고리즘을 재구성하여 실행하니 문자 묶음 내부 줄바꿈 8곳으로 FAIL, 현재 Intl.Segmenter 구현은 0곳으로 PASS였다. 두 구현 모두 원문과 측정 폭 조건은 유지했다. 과거 실패 출력과 재구성의 일치도 확인했으나 과거에 E04 전체 입력을 실행한 기록이나 원본 과거 소스 실행이라고 주장하지 않는다. 실행 코드·결과는 qa/submission-e04-reproduction.mjs와 .json에 보관한다.
+
+완성 PNG 세 파일은 정상 디코딩·크기·IHDR/IDAT/IEND 청크만 존재함을 재확인했다. 보고서에 세 완성본과 제작 근거를 함께 넣고, 한글·표·이미지의 잘림 여부를 5쪽 모두 렌더링하여 시각 확인했다.

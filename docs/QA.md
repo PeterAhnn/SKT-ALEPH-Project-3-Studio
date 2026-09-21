@@ -97,3 +97,7 @@ Vercel 배포 dpl_Dv5usdA5T5hNPyfL6CPDg3gDgu6N READY, 코드 커밋 970fd1761756
 - 80줄 입력 3px 무안내 → 실제 저장 크기와 가독성 경고를 입력 옆과 미리보기에 표시. 160자 원문 유지. 24px는 앱 안내 기준이며 보편적인 가독성 표준이라는 주장은 아니다.
 
 로컬 최신 결과: Node 33건 PASS, 기존 편집 30건(qa/v2-browser-results.json), 폰트 41건(qa/v2-fonts-results.json), 복원 UI·트랜잭션 실패 12건(qa/v2-backup-atomic-final.json), 큰 사진/반복 복원/경고 13건(qa/v2-storage-results.json), 실제 재접속 이전 4건(qa/v2-migration.json), 새 저장소 손상 복구 4건(qa/v2-recovery.json), 이전 저장소 손상 보호 4건(qa/v2-legacy-recovery.json), 이미지 경계 2건(qa/v2-image-boundary.json) PASS. 큰 이미지 검사 후 실제 reload 결과는 qa/v2-storage-reload.json. 공개 재검증 전 결과와 구분한다.
+
+공개 재검증: Vercel dpl_H7hCLd8n8Ku2h6WDKoGKiTQZRJtC READY, 앱 커밋 757e14a97d9121bc6e994561a35477414e67c5e9. 기존 browse 종료 후 새 headless Chromium 격리 컨텍스트를 시작했다. 시작 중 CLI 탐색 타임아웃이 있었으나 실제 새 탭의 공개 편집기 정상 로드·빈 저장소를 확인한 뒤 검사를 수행했다(qa/v2-public-first-open.json). 로그인·쿠키 가져오기를 하지 않았다. 결과물과 GitHub 전체 커밋은 인증 없이 열렸고 소스 커밋 제목·로그인 링크를 확인했다(qa/v2-public-source.json). 실제 GUI 시크릿 창 수동 조작과 구분한다.
+
+공개 편집 30건, 폰트 41건, 백업 12건, 큰 사진·반복 복원 13건 PASS: qa/v2-public-browser.json, v2-public-fonts.json, v2-public-backup.json, v2-public-storage.json. 새로고침 후 사진 자산 3개·템플릿 3개·수정 문구와 저장 완료 상태 유지(v2-public-reload.json). 390×844 모바일 다크 화면에서 핵심 입력 3개 모두 첫 화면 안에 있고 가로 넘침 없음(v2-public-mobile.json, v2-public-mobile-dark.png). 위 변경으로 사용자의 최종 완성 이미지 검토를 대신 완료 처리하지 않는다.

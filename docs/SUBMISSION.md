@@ -6,7 +6,7 @@ https://skt-aleph-project-3-studio.vercel.app
 
 ## 소스 저장소 URL
 
-https://github.com/PeterAhnn/SKT-ALEPH-Project-3-Studio/commit/970fd17617562627a1840b36d45208069fa3e5e9
+https://github.com/PeterAhnn/SKT-ALEPH-Project-3-Studio/commit/757e14a97d9121bc6e994561a35477414e67c5e9
 
 ## 재현·통과 확인 4가지
 
@@ -20,7 +20,7 @@ https://github.com/PeterAhnn/SKT-ALEPH-Project-3-Studio/commit/970fd17617562627a
 ## AI와 내 판단 3줄
 
 ```text
-AI에게 맡긴 일: 편집기와 시스템·라이트·다크 테마 구현, 무료 폰트 선정·라이선스 확인·추가, 세 화면비와 이미지 저장, 템플릿·JSON 복원, 극단 입력 검사와 이모지 결함 수정, Vercel 배포.
+AI에게 맡긴 일: 편집기와 시스템·라이트·다크 테마 구현, 무료 폰트 선정·라이선스 확인·추가, 세 화면비와 이미지 저장, 사진 중복 없는 템플릿 저장·무손실 JSON 복원·손상 원본 보존, 모바일 편집 배치, 극단 입력 검사와 결함 수정, Vercel 배포.
 내가 판단한 일: 기본 테마는 시스템 설정을 따르게 하고, 라이트·다크 전환 기능 및 널리 쓰이는 무료 폰트를 추가하도록 결정했다.
 AI 말을 안 들은 일: AI가 선택한 Sites 배포를 그대로 사용하지 않고, 매뉴얼에 안내된 서비스에 맞춰 Vercel 배포로 변경하도록 요청했다.
 ```

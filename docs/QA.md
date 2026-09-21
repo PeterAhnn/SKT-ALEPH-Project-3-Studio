@@ -77,3 +77,9 @@ Sites 기본 패키징 스크립트는 이 Windows의 bash 실행 파일 부재�
 7종 각각 실제 FontFace 로드, 세 화면비 PNG 전체 픽셀 일치, JPEG 디코딩을 확인했다. 폰트 전송 실패를 주입했을 때 이전 글꼴·저장 JSON·캔버스가 보존되었다. 템플릿과 JSON의 새 폰트 ID 복원도 통과했다. 실제 새로고침 후 나눔손글씨 펜 로드와 템플릿 1개 유지 확인. qa/fonts-contact.png의 7종 글자 모양을 시각 확인했다. 폰트 검사의 첫 실패는 공백이 있는 FontFace.family가 따옴표로 직렬화되는 검사 코드 문제였으며 실제 폰트 로드는 성공했다. 비교 시 따옴표를 정규화한 뒤 전체 재검사했다.
 
 Vercel 공개 재검증: 코드 커밋 080d1047577b944727f246b7a313a00e4cf2bd4a, 배포 dpl_2SceWnD8xChYxWx1TGAZXoHTEk7o READY. 공개 도메인에서 폰트 브라우저 검사 41건 PASS(qa/public-fonts-results.json). 실제 새로고침 후 나눔손글씨 펜 로드 완료·다운로드 활성·기존 2개와 추가 1개의 템플릿 유지(qa/public-fonts-reload.json). 비로그인 browse 컨텍스트에서 편집기, /fonts/licenses.html, GitHub 전체 커밋의 제목과 로그인 링크를 확인했다. 이번 확인은 기존 격리 QA 컨텍스트를 재사용했으며 새 시크릿 생성 검사와 구분한다.
+
+## 후속 변경 — 백업·가져오기 흐름
+
+2026-09-21: 상단의 JSON 버튼을 내 템플릿 영역으로 이동했다. 「작업 백업 다운로드」「백업 파일 가져오기」로 표시하고 .json은 설명에 남겼다. 파일 전체 검증 후 이름·개수·문구·화면비와 전체 교체 안내를 보여준다. 확인 단계에서는 저장하지 않으며 「이 내용으로 복원」을 눌러야 적용한다. 오류는 같은 영역에서 거부 이유와 기존 작업 보존을 안내한다.
+
+로컬 검사: Node 29건 PASS, 기존 편집 검사 30건 PASS(qa/backup-regression-local.json), 폰트 검사 41건 PASS(qa/backup-fonts-local.json). 새 흐름 12건 PASS(qa/backup-flow-local.json): 위치, 선택만으로 무변경, 복원 요약, 이름의 HTML 비실행, 교체 안내·포커스, 취소 보존, 손상 거부·이전 후보 해제, 오래된 후보 적용 불가, 필수 누락 거부, 저장 공간 오류 보존, 명시적 전체 복원, 템플릿 0개 표시. 저장 실패는 Storage.setItem 오류를 실제 주입해 확인했다. 라이트와 390×844 다크 화면을 시각 확인했고 문서 폭 390px로 가로 넘침이 없었다. qa/backup-panel-light.png, qa/backup-panel-mobile-dark.png 보관.

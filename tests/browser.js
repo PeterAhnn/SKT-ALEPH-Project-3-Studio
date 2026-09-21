@@ -46,9 +46,9 @@ return await (async()=>{
     document.querySelectorAll('.template .delete')[1].click();saved=JSON.parse(localStorage.getItem(KEY));assert('C20 두 번째 템플릿 삭제',saved.templates.length===2&&saved.templates[1].name==='템플릿 3');
     $('backup').click();const backup=lastDownload.blob;const beforeBackup=localStorage.getItem(KEY);
     for(const [label,raw] of [['C23 문법 손상 JSON','{"version":'],['C24 필수 항목 누락 JSON',JSON.stringify({version:1,current:saved.current,templates:[{id:'missing',state:saved.current}]})]]){
-      await upload(new File([raw],'bad.json',{type:'application/json'}),'restore');assert(label,localStorage.getItem(KEY)===beforeBackup&&$('status').classList.contains('error'),$('status').textContent)
+      await upload(new File([raw],'bad.json',{type:'application/json'}),'restore');assert(label,localStorage.getItem(KEY)===beforeBackup&&$('backup-status').classList.contains('error'),$('backup-status').textContent)
     }
-    input('headline','복원 전에 바꾼 문구');await upload(new File([backup],'good.json',{type:'application/json'}),'restore');saved=JSON.parse(localStorage.getItem(KEY));assert('C22 JSON 전체 복원',saved.templates.length===2&&$('headline').value==='수정한 첫 카드');
+    input('headline','복원 전에 바꾼 문구');await upload(new File([backup],'good.json',{type:'application/json'}),'restore');$('restore-apply').click();await wait();saved=JSON.parse(localStorage.getItem(KEY));assert('C22 JSON 전체 복원',saved.templates.length===2&&$('headline').value==='수정한 첫 카드');
     const net=performance.getEntriesByType('resource').filter(r=>!r.name.startsWith(location.origin)&&!r.name.startsWith('blob:')&&!r.name.startsWith('data:'));
     assert('외부 네트워크 전송 0건',net.length===0,JSON.stringify(net.map(r=>r.name)));
     return {at:new Date().toISOString(),results,reloadExpected:{names:saved.templates.map(t=>t.name),headline:saved.current.headline}};

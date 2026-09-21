@@ -39,6 +39,7 @@ return await (async()=>{
     await choose('serif');document.querySelectorAll('.template .load')[count].click();await wait();check('템플릿 폰트 복원',$('font').value==='nanum-pen');
     $('backup').click();const backup=lastDownload;await choose('sans');
     const transfer=new DataTransfer();transfer.items.add(new File([backup],'font-backup.json',{type:'application/json'}));$('restore').files=transfer.files;$('restore').dispatchEvent(new Event('change',{bubbles:true}));await wait();
+    $('restore-apply').click();await wait();
     check('JSON 폰트 복원',$('font').value==='nanum-pen'&&JSON.parse(localStorage.getItem(key)).current.font==='nanum-pen');
     check('폰트는 동일 출처로만 요청',performance.getEntriesByType('resource').filter(r=>/\.(ttf|woff2)/.test(r.name)).every(r=>r.name.startsWith(location.origin+'/fonts/')));
     return {at:new Date().toISOString(),results};

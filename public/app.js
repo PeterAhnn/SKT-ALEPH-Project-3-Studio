@@ -86,7 +86,37 @@ function list(){
 }
 function saveTemplate(update=false){try{const name=$('template-name').value.trim();if(!name)throw new Error('템플릿 이름을 입력해 주세요.');if(!update&&templates.length>=12)throw new Error('최대 12개까지 보관할 수 있어요. JSON 백업 후 정리해 주세요.');if(update&&!templates.some(t=>t.id===selected))throw new Error('수정할 템플릿을 먼저 불러와 주세요.');const item={id:update?selected:crypto.randomUUID(),name,state:{...state}},next=update?templates.map(t=>t.id===selected?item:t):[...templates,item];persist({...data(),templates:next});templates=next;selected=item.id;list();status(update?'선택한 템플릿을 수정했어요.':'새 템플릿을 저장했어요.')}catch(e){status(e.message,true)}}
 $('save-template').onclick=()=>saveTemplate();$('update-template').onclick=()=>saveTemplate(true);
-$('backup').onclick=()=>{download(new Blob([JSON.stringify(data(),null,2)],{type:'application/json'}),'jjal-studio-backup.json');status('현재 편집과 모든 템플릿의 JSON 백업을 준비했어요.')};
-$('restore').onchange=e=>{const file=e.target.files[0];e.target.value='';if(!file)return;busy(async()=>{if(file.size>16*1024*1024)throw new Error('JSON은 최대 16MB까지 복원할 수 있어요.');let raw;try{raw=JSON.parse(await file.text())}catch{throw new Error('JSON 문법이 손상됐어요. 현재 편집과 템플릿은 유지돼요.')}const next=validateBackup(raw);for(const s of [next.current,...next.templates.map(t=>t.state)])if(s.image){s.image=(await cleanImage(bytesFromData(s.image))).src}const img=next.current.image?await decode(next.current.image):null;if(!confirm(`현재 편집과 템플릿 목록을 백업의 ${next.templates.length}개로 바꿀까요? 기존 작업이 필요하면 취소 후 JSON 백업을 먼저 받아 주세요.`))return;await prepareFont(next.current.font);const blocked=storageBlocked;storageBlocked=false;try{persist(next)}catch(e){storageBlocked=blocked;throw e}state=next.current;templates=next.templates;image=img;selected=null;sync();list();status(`${templates.length}개 템플릿과 편집 내용을 복원했어요.`)})};
+let pendingRestore=null;
+function backupStatus(message,error=false){$('backup-status').textContent=message;$('backup-status').classList.toggle('error',error)}
+function clearRestore(){pendingRestore=null;$('restore-review').hidden=true;$('restore-names').replaceChildren()}
+function backupTask(task){return busy(async()=>{try{await task()}catch(error){backupStatus(error.message+' 현재 편집과 템플릿은 그대로 유지돼요.',true)}})}
+$('backup').onclick=()=>{download(new Blob([JSON.stringify(data(),null,2)],{type:'application/json'}),'jjal-studio-backup.json');backupStatus('현재 편집과 템플릿 '+templates.length+'개의 백업 파일을 준비했어요. 브라우저 다운로드 목록을 확인하세요.')};
+$('restore').onchange=e=>{
+  const file=e.target.files[0];e.target.value='';if(!file)return;
+  backupTask(async()=>{
+    clearRestore();backupStatus('백업 파일을 확인하고 있어요…');
+    if(file.size>16*1024*1024)throw new Error('백업 파일은 최대 16MB까지 가져올 수 있어요.');
+    let raw;try{raw=JSON.parse(await file.text())}catch{throw new Error('백업 파일의 JSON 형식이 손상됐어요. 정상 백업 파일을 골라 주세요.')}
+    const next=validateBackup(raw);
+    for(const s of [next.current,...next.templates.map(t=>t.state)])if(s.image)s.image=(await cleanImage(bytesFromData(s.image))).src;
+    const img=next.current.image?await decode(next.current.image):null;
+    pendingRestore={next,img};
+    $('restore-file').textContent=file.name;
+    $('restore-summary').textContent=`현재 편집 1개 · 템플릿 ${next.templates.length}개`;
+    for(const t of next.templates){const item=document.createElement('li');item.textContent=t.name;$('restore-names').append(item)}
+    $('restore-names').hidden=next.templates.length===0;
+    $('restore-headline').textContent=next.current.headline||'(빈 문구)';$('restore-caption').textContent=next.current.caption||'(빈 문구)';
+    $('restore-ratio').textContent={square:'정사각 1:1',portrait:'세로 4:5',story:'스토리 9:16'}[next.current.ratio];
+    $('restore-review').hidden=false;backupStatus('아직 적용하지 않았어요. 아래 내용을 확인한 뒤 복원해 주세요.');$('restore-title').focus();
+  });
+};
+$('restore-cancel').onclick=()=>{clearRestore();backupStatus('가져오기를 취소했어요. 현재 편집과 템플릿은 그대로예요.');$('restore').focus()};
+$('restore-apply').onclick=()=>backupTask(async()=>{
+  if(!pendingRestore)return;
+  const {next,img}=pendingRestore;await prepareFont(next.current.font);
+  const blocked=storageBlocked;storageBlocked=false;try{persist(next)}catch(error){storageBlocked=blocked;throw error}
+  state=next.current;templates=next.templates;image=img;selected=null;$('template-name').value='';sync();list();clearRestore();
+  backupStatus(`템플릿 ${templates.length}개와 편집 내용을 복원했어요.`);
+}).then(()=>{if($('restore-review').hidden)$('restore').focus()});
 async function init(){try{const saved=localStorage.getItem(KEY);if(saved){const d=validateBackup(JSON.parse(saved));for(const s of [d.current,...d.templates.map(t=>t.state)])if(s.image)checkImage(bytesFromData(s.image));image=d.current.image?await decode(d.current.image):null;state=d.current;templates=d.templates}}catch{storageBlocked=true;status('저장 데이터를 읽을 수 없어요. 원본은 덮어쓰지 않았어요. 정상 JSON 백업을 복원해 주세요.',true)}sync();list()}
 await busy(async()=>{await init();try{await prepareFont(state.font);render()}catch(error){status(error.message+' 현재 미리보기는 대체 글꼴로 표시될 수 있어요.',true)}});
